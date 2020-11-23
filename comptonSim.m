@@ -1,27 +1,27 @@
-function y = Project %Allows M-file to be called as a function in MATLAB
+function y = comptonSim %Allows M-file to be called as a function in MATLAB
 
 %Imput Specific Design Values
 global m_p m_s r_piston c R f_e mu I_p g P_o V_o k x_s_f x_s_o R_angle
 
-m_p = ****; %mass of pellet ( kg )
-m_s = ****; %mass of spring piston + 1/3 spring mass ( kg )
-r_piston = ****; %radius of spring piston in air gun ( m )
-c = ****; %caliber ( m )
-R = ****; %twist rate of rifling ( 1/m )
-f_e = ****; %experimentally quantified elastic compression friction force for pellet-style ( N )
-mu = ****; %kinetic coeficient of friction between pellet and barrel materials
-I_p = ****; %mass moment of inertia of pellet along its lognitudinal central axis ( kg*m^2 )
+m_p = 0.0012; %mass of pellet ( kg )
+m_s = 0.039; %mass of spring piston + 1/3 spring mass ( kg )
+r_piston = 0.034798/2; %radius of spring piston in air gun ( m )
+c = 0.013; %caliber ( m )
+R = 0; %twist rate of rifling ( 1/m )
+f_e = 15; %experimentally quantified elastic compression friction force for pellet-style ( N )
+mu = .3; %kinetic coeficient of friction between pellet and barrel materials
+I_p = 0.0000000216; %mass moment of inertia of pellet along its lognitudinal central axis ( kg*m^2 )
 g = 9.801; %force of local gravitational feild (use standard earth value for analysis) ( m/(kg*s^2) )
 P_o = 1.013*10^5; %local atmospheric pressure (normally set at see level for analysis) ( Pa )
-V_o = ****; %Volume of air in cylinder when the air gun is "cocked" ( m^3 )
-k = ****; %spring constant ( N/m )
-x_s_f = ****; %compression of spring assembly after cocking ( m )
-x_s_o = ****; %compression of spring assembly before cocking ( m )
-barrel_length = ****; % ( m )
+V_o = 0.00008455; %Volume of air in cylinder when the air gun is "cocked" ( m^3 )
+k = 679.5; %spring constant ( N/m )
+x_s_f = 0.192198; %compression of spring assembly after cocking ( m )
+x_s_o = 0.103298 ; %compression of spring assembly before cocking ( m )
+barrel_length = 0.5; % ( m )
 R_angle = atan(R*(pi*c)); %Twist angle of Rifling Formula -- Don't Change Formula !!!
 
 %First solve the initial value problem using "ode45"
-tspan=[0,0.01];x0=[0;0]; %Time Span ( tspan ) may have to be increased or decreased for different models
+tspan=[0,0.04];x0=[0;0]; %Time Span ( tspan ) may have to be increased or decreased for different models
 [t,x] = ode45(@problem_func,tspan,x0);
 x(:,1) = real((x(:,1) + ((x_s_f-x_s_o)-x(:,1)).*(x(:,1) >= (x_s_f-x_s_o))));x(:,2) = real(x(:,2));
 
