@@ -22,7 +22,8 @@ R_angle = atan(R*(pi*c)); %Twist angle of Rifling Formula -- Don't Change Formul
 
 %First solve the initial value problem using "ode45"
 tspan=[0,0.04];x0=[0;0]; %Time Span ( tspan ) may have to be increased or decreased for different models
-[t,x] = ode45(@problem_func,tspan,x0);
+options = odeset('RelTol', 1e-7, 'AbsTol', 1e-9);
+[t,x] = ode45(@problem_func, tspan, x0, options);
 x(:,1) = real((x(:,1) + ((x_s_f-x_s_o)-x(:,1)).*(x(:,1) >= (x_s_f-x_s_o))));x(:,2) = real(x(:,2));
 
 %Make a plot for (t,x_p)
@@ -67,6 +68,9 @@ muzzle_energy = (m_p + 4.*I_p.*pi.^2.*R.^2).*(muzzle_velocity).^2
 
 %Find and display the Maximum Internal Pressure Within Spring-Air Pellet Gun ( Pa )
 max_pressure = max(abs(Pres))
+
+arrayLength = length(vel_p)
+
 %sub-function Library for this file
 
 %Preliminary Functions
