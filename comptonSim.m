@@ -6,18 +6,18 @@ global m_p m_s r_piston c R f_e mu I_p g P_o V_o k x_s_f x_s_o R_angle
 m_p = 0.0012; %mass of pellet ( kg )
 m_s = 0.039; %mass of spring piston + 1/3 spring mass ( kg )
 r_piston = 0.034798/2; %radius of spring piston in air gun ( m )
-c = 0.013; %caliber ( m )
+c = 0.0133; %caliber ( m )
 R = 0; %twist rate of rifling ( 1/m )
 f_e = 10; %experimentally quantified elastic compression friction force for pellet-style ( N )
 mu = .5; %kinetic coeficient of friction between pellet and barrel materials
 I_p = 0.0000000216; %mass moment of inertia of pellet along its lognitudinal central axis ( kg*m^2 )
 g = 9.801; %force of local gravitational feild (use standard earth value for analysis) ( m/(kg*s^2) )
 P_o = 1.013*10^5; %local atmospheric pressure (normally set at see level for analysis) ( Pa )
-V_o = 0.00008455; %Volume of air in cylinder when the air gun is "cocked" ( m^3 )
+V_o = 0.00014255 + 0.000004*2; %Volume of air in cylinder when the air gun is "cocked" ( m^3 )
 k = 679.5; %spring constant ( N/m )
-x_s_f = 0.192198; %compression of spring assembly after cocking ( m )
-x_s_o = 0.103298 ; %compression of spring assembly before cocking ( m )
-barrel_length = 0.5; % ( m )
+x_s_f = 0.040818+0.15138; %compression of spring assembly after cocking ( m )
+x_s_o = 0.040818 ; %compression of spring assembly before cocking ( m )
+barrel_length = 0.33; % ( m )
 R_angle = atan(R*(pi*c)); %Twist angle of Rifling Formula -- Don't Change Formula !!!
 
 %First solve the initial value problem using "ode45"
@@ -33,7 +33,7 @@ ylabel('x_p')
 title('Position of Pellet in Barrel as a Function of Time')
 shg
 
-pause
+#pause
 
 %Next make a plot for (x_p,v_p)
 vel_s = real((x(:,1)<(x_s_f-x_s_o)).*(k.*(x_s_f - x(:,1)) - ( (pi.*r_piston^2.*P_o.*V_o)
@@ -48,7 +48,7 @@ ylabel('v_p')
 title('Velocity of Pellet in Barrel as a Function of Pellet Position in Barrel')
 shg
 
-pause
+#pause
 
 %Next make a plot for (x_p,P(x_p))
 Pres = ( (P_o.*V_o)./(V_o - pi.*r_piston.^2.*x(:,1) + (pi./4).*c.^2.*x(:,2)) ) - P_o;
