@@ -1,7 +1,7 @@
 function y = comptonSim %Allows M-file to be called as a function in MATLAB
 
 %Imput Specific Design Values
-global m_p m_s r_piston c R f_e mu I_p g P_o V_o k x_s_f x_s_o R_angle
+global m_p m_s r_piston c R f_e mu mu_static mu_dynamic I_p g P_o V_o k x_s_f x_s_o R_angle
 
 m_p = 0.0012; %mass of pellet ( kg )
 m_s = 0.039; %mass of spring piston + 1/3 spring mass ( kg )
@@ -10,6 +10,8 @@ c = 0.0133; %caliber ( m )
 R = 0; %twist rate of rifling ( 1/m )
 f_e = 10; %experimentally quantified elastic compression friction force for pellet-style ( N )
 mu = .5; %kinetic coeficient of friction between pellet and barrel materials
+mu_static = 1.0;
+mu_dynamic = 0.5;
 I_p = 0.0000000216; %mass moment of inertia of pellet along its lognitudinal central axis ( kg*m^2 )
 g = 9.801; %force of local gravitational feild (use standard earth value for analysis) ( m/(kg*s^2) )
 P_o = 1.013*10^5; %local atmospheric pressure (normally set at see level for analysis) ( Pa )
@@ -90,12 +92,17 @@ f4 = (( (4.*I_p.*R.*pi.*mu.*P_o.*V_o)./(m_p.*c.*(cos(R_angle) + mu.*sin(R_angle)
 ./(m_p.*(cos(R_angle) + mu*sin(R_angle))) ));
 
 function f5 = ElasticCompressionFriction(x_p)
-global m_p m_s r_piston c R f_e mu I_p g P_o V_o k x_s_f x_s_o R_angle;
+global m_p m_s r_piston c R f_e mu mu_static mu_dynamic I_p g P_o V_o k x_s_f x_s_o R_angle;
+if x_p < 0.001
+    mu = mu_static;
+else
+    mu = mu_dynamic;
+end
 f5 = f_e.*mu.*x_p;
 
 function f6 = BoreFriction(x_s,x_p)
 global m_p m_s r_piston c R f_e mu I_p g P_o V_o k x_s_f x_s_o R_angle;
-f6 = SimpleGravitationalFriction(x_p) + ElasticCompressionFriction(x_p) + LognitudinalRiflingFriction(x_s,x_p);
+f6 = ElasticCompressionFriction(x_p);
 
 function f7 = EnergyStoredInCompressedGas(x_s,x_p)
 global m_p m_s r_piston c R f_e mu I_p g P_o V_o k x_s_f x_s_o R_angle;
